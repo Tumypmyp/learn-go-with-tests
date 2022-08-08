@@ -4,28 +4,73 @@ import (
   "strings"
 )
 
+type RomanNumeral struct {
+  Value int
+  Symbol string
+}
+
+type RomanNumerals []RomanNumeral
+
+func (r RomanNumerals) ValueOf(symbols ...byte) int {
+  symbol := string(symbols)
+  for _, s := range r {
+    if s.Symbol == symbol {
+      return s.Value
+    }
+  }
+  return 0
+}
+
+var allRomanNumerals = RomanNumerals{
+  {1000, "M"},
+  {900, "CM"},
+  {500, "D"},
+  {400, "CD"},
+  {100, "C"},
+  {90, "XC"},
+  {50, "L"},
+  {40, "XL"},
+  {10, "X"},
+  {9, "IX"},
+  {5, "V"},
+  {4, "IV"},
+  {1, "I"},
+}
+
 func ConvertToRoman(n int) string {
   var result strings.Builder
 
-  for n > 0 {
-    switch {
-    case n >= 10:
-      result.WriteString("X")
-      n -= 10
-    case n >= 9:
-      result.WriteString("IX")
-      n -= 9
-    case n >= 5:
-      result.WriteString("V")
-      n -= 5
-    case n >= 4:
-      result.WriteString("IV")
-      n -= 4
-    default:
-      result.WriteString("I")
-      n--
+  for _, numeral := range allRomanNumerals {
+    for n >= numeral.Value {
+      result.WriteString(numeral.Symbol)
+      n -= numeral.Value
     }
   }
 
   return result.String()
+}
+
+func ConvertToArabic(roman string) int {
+  total := 0
+  for i := 0; i < len(roman); i++ {
+    symbol := roman[i]
+    if couldBeSubtractive(i, symbol, roman) {
+      nextSymbol := roman[i + 1]
+
+      if value := allRomanNumerals.ValueOf(symbol, nextSymbol); value != 0 {
+        total += value
+        i++
+      } else {
+        total += allRomanNumerals.ValueOf(symbol)
+      }
+    } else {
+      total += allRomanNumerals.ValueOf(symbol)
+    }
+  }
+  return total
+
+}
+
+func couldBeSubtractive(index int, currentSymbol uint8, roman string) bool {
+     return index + 1 < len(roman) // && currentSymbol == 'I'
 }
