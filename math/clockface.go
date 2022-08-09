@@ -10,8 +10,15 @@ type Point struct {
   Y float64
 }
 
+const secondHandLength = 90
+const clockCenterX = 150
+const clockCenterY = 150
 func SecondHand(t time.Time) Point {
-  return Point{150, 60}
+  p := secondHandVector(t)
+  p = Point{p.X * secondHandLength, -p.Y * secondHandLength}
+  p.X += clockCenterX
+  p.Y += clockCenterY
+  return p
 }
 
 func secondsToRadians(t time.Time) float64 {
