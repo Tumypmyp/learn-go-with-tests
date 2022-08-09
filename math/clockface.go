@@ -6,8 +6,8 @@ import (
 )
 
 type Point struct {
-  x float64
-  y float64
+  X float64
+  Y float64
 }
 
 func SecondHand(t time.Time) Point {

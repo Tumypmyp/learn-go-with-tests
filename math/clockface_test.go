@@ -57,8 +57,8 @@ func TestSecondHandVector(t *testing.T) {
 }
 
 func roughlyEqualPoint(a, b Point) bool {
-  return roughlyEqualFloat64(a.x, b.x) &&
-    roughlyEqualFloat64(a.y, b.y)
+  return roughlyEqualFloat64(a.X, b.X) &&
+    roughlyEqualFloat64(a.Y, b.Y)
 }
 
 func roughlyEqualFloat64(a, b float64) bool {

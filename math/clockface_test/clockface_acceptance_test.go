@@ -4,7 +4,7 @@ import (
   "testing"
   "time"
   //"../clockface"
-  "github.com/tumypmyp/learn-go-with-tests/math/clockface"
+  "github.com/tumypmyp/learn-go-with-tests/math"
   //"github.com/quii/learn-go-with-tests/math/v1/clockface"
 )
 
