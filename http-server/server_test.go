@@ -49,12 +49,12 @@ func TestGETPlayers(t *testing.T) {
 }
 
 func TestScoreWins(t *testing.T) {
-	store := StubPlayerStore{
+	store := &StubPlayerStore{
 		map[string]int{},
 		[]string{},
 		nil,
 	}
-	server := NewPlayerServer(&store)
+	server := NewPlayerServer(store)
 
 	t.Run("it returns accepted on POST", func(t *testing.T) {
 		player := "Pepper"
@@ -63,13 +63,19 @@ func TestScoreWins(t *testing.T) {
 		server.ServeHTTP(response, newPostWinRequest(player))
 
 		assertStatus(t, response.Code, http.StatusAccepted)
-		if len(store.winCalls) != 1 {
-			t.Errorf("got %d calls to RecordWins, want %d", len(store.winCalls), 1)
-		}
-		if store.winCalls[0] != player {
-			t.Errorf("did not store the correct winner, got %q, want %q", store.winCalls[0], player)
-		}
+		assertPlayerWin(t, store, player)
 	})
+}
+
+func assertPlayerWin(t testing.TB, store *StubPlayerStore, player string) {
+	t.Helper()
+	if len(store.winCalls) != 1 {
+		t.Errorf("got %d calls to RecordWins, want %d", len(store.winCalls), 1)
+	}
+	if store.winCalls[0] != player {
+		t.Errorf("did not store the correct winner, got %q, want %q", store.winCalls[0], player)
+	}
+
 }
 
 func assertStatus(t testing.TB, got, want int) {
