@@ -4,6 +4,7 @@ import (
 	"net/http/httptest"
 	"reflect"
 	"testing"
+	"time"
 )
 
 type StubPlayerStore struct {
@@ -75,4 +76,16 @@ func AssertNoError(t testing.TB, err error) {
 	if err != nil {
 		t.Fatalf("didn't expect an error but got one, %v", err)
 	}
+}
+
+type BlindAlert struct {
+	ScheduledAt time.Duration
+	Amount      int
+}
+type SpyBlindAlerter struct {
+	Alerts []BlindAlert
+}
+
+func (s *SpyBlindAlerter) ScheduleAlertAt(duration time.Duration, amount int) {
+	s.Alerts = append(s.Alerts, BlindAlert{duration, amount})
 }
